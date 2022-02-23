@@ -1,17 +1,31 @@
+import { useEffect } from "react";
 import "./App.css";
 import Navigation from "./components/Navigation/Navigation";
 import Warehouses from "./components/Warehouses/Warehouses";
+import { getDatabase, ref, get, child } from "firebase/database";
+import { warehouseAction } from "./store/store";
+import { useDispatch } from "react-redux";
 
 function App() {
-  // useEffect(() => {
-  //   fetch("https://drive.google.com/file/d/1lePlZg-_dXxq4u7Zwt_AFcNm4ryypfTJ")
-  //     .then((response) => {
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       console.log(data);
-  //     });
-  // }, []);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, `warehouse/`))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          dispatch(warehouseAction.updateWarehouses(data));
+          console.log(data);
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        window.location.reload();
+      });
+  }, [dispatch]);
 
   return (
     <div className="App">

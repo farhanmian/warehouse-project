@@ -1,10 +1,8 @@
 import React from "react";
 import classes from "./Warehouses.module.css";
 import { Card, Typography, makeStyles } from "@material-ui/core";
-import { warehouseInfo } from "../warehouseInfo";
 import { Grid } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { warehouseInfoAction } from "../../store/store";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const useStyle = makeStyles({
@@ -34,49 +32,47 @@ const useStyle = makeStyles({
 
 const Warehouses = () => {
   const style = useStyle();
-  const dispatch = useDispatch();
+  const warehouseData = useSelector((state) => state.warehouses.warehouses);
 
-  const warehouseNameSearch = useSelector((state) => state.warehouseName.name);
+  const warehouseNameSearch = useSelector(
+    (state) => state.warehouseSearch.name
+  );
 
   return (
     <section>
       <div className={classes.container}>
         <Grid container columnGap="50px" justifyContent="center" rowGap="40px">
-          {warehouseInfo.map((cur) => {
-            return (
-              cur.name
-                .toLowerCase()
-                .includes(warehouseNameSearch.toLowerCase()) && (
-                <Grid
-                  key={cur.id}
-                  className={`${classes.gridInfoItem} ${style.innercard}`}
-                  item
-                  md={6}
-                  sm={6}
-                  xs={12}
-                >
-                  <Card
-                    onClick={() => {
-                      dispatch(warehouseInfoAction.warehouseInfo(cur.id));
-                    }}
-                    className={style.warehouseCard}
+          {warehouseData.length > 0 &&
+            warehouseData.map((cur, i) => {
+              return (
+                cur.name
+                  .toLowerCase()
+                  .includes(warehouseNameSearch.toLowerCase()) && (
+                  <Grid
+                    key={i}
+                    className={`${classes.gridInfoItem} ${style.innercard}`}
+                    item
+                    md={6}
+                    sm={6}
+                    xs={12}
                   >
-                    <Link to={`/warehouse/${cur.id}`}>
-                      <div>
-                        <Typography>Name:{cur.name}</Typography>
-                        <Typography>Code:{cur.code}</Typography>
-                        <Typography>City:{cur.city}</Typography>
-                        <Typography>Cluster:{cur.cluster}</Typography>
-                        <Typography>
-                          Space-Available:{cur.space_available}
-                        </Typography>
-                      </div>
-                    </Link>
-                  </Card>
-                </Grid>
-              )
-            );
-          })}
+                    <Card className={style.warehouseCard}>
+                      <Link to={`/warehouse/${cur.id}`}>
+                        <div>
+                          <Typography>Name:{cur.name}</Typography>
+                          <Typography>Code:{cur.code}</Typography>
+                          <Typography>City:{cur.city}</Typography>
+                          <Typography>Cluster:{cur.cluster}</Typography>
+                          <Typography>
+                            Space-Available:{cur.space_available}
+                          </Typography>
+                        </div>
+                      </Link>
+                    </Card>
+                  </Grid>
+                )
+              );
+            })}
         </Grid>
       </div>
     </section>

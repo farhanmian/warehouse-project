@@ -2,7 +2,7 @@ import React from "react";
 import classes from "./Navigation.module.css";
 import { Typography } from "@material-ui/core";
 import { useDispatch } from "react-redux";
-import { warehouseAction } from "../../store/store";
+import { warehouseSearchAction } from "../../store/store";
 
 const Navigation = () => {
   const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const Navigation = () => {
         <div className={classes.searchBox}>
           <input
             onChange={(e) => {
-              dispatch(warehouseAction.searchName(e.target.value));
+              dispatch(warehouseSearchAction.searchName(e.target.value));
             }}
             placeholder="serch"
           ></input>
