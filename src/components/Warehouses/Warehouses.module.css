@@ -1,0 +1,35 @@
+.container {
+  max-width: 1400px;
+  margin: auto;
+  margin-top: 150px;
+}
+
+.container {
+  margin: auto;
+  margin-top: 120px;
+  max-width: 1200px;
+  margin-bottom: 200px;
+}
+
+.gridInfoItem {
+  max-width: 282px !important;
+  height: 110px;
+}
+
+.gridInfoCard {
+  max-width: 282px;
+  height: 110px;
+}
+
+.gridInfoCard:hover {
+  background-color: #a259ff;
+  cursor: pointer;
+  color: #fff;
+}
+
+.gridInfoCard:hover .gender {
+  color: #fff;
+}
+.gridInfoCard:hover .userEmail {
+  color: #fff;
+}
