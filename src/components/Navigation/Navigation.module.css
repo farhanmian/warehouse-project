@@ -1,12 +1,44 @@
-.navContainer {
-  margin: auto;
-  max-width: 1600px;
-  height: 100px;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+.nav {
+  background-color: rgba(41, 40, 40, 0.815);
+  position: fixed;
+  top: 0%;
+  width: 100%;
+  z-index: 999;
+  backdrop-filter: blur(30px);
 }
 
-.nav {
-  background-color: aqua;
+.navContainer {
+  margin: auto;
+  max-width: 1320px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.searchBox {
+  margin: auto;
+}
+
+.searchInput {
+  width: 400px;
+  height: 30px;
+  border-radius: 15px;
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+  transition: all 0.2s;
+}
+.searchInput:focus {
+  border-width: 2px;
+  outline: none;
+}
+
+.logoContainer {
+  width: 110px;
+  position: absolute;
+  left: 0;
+}
+
+.logo {
+  width: 100%;
 }

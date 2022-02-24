@@ -3,8 +3,9 @@ import classes from "./IndividualWarehouse.module.css";
 import { Typography, makeStyles, TextField, Button } from "@material-ui/core";
 import { useParams } from "react-router-dom";
 import { Edit } from "@material-ui/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getDatabase, ref, set } from "firebase/database";
+import { warehouseAction } from "../../store/store";
 const db = getDatabase();
 
 const useStyle = makeStyles({
@@ -99,10 +100,14 @@ const warehouseReducerFn = (state, action) => {
     return { ...state, space_available: action.value };
   }
 };
+const arrayOfFields = ["name", "code", "city", "cluster", "space_available"];
 
 const IndividualWarehouse = () => {
+  const dispatch = useDispatch();
+  const warehousesData = useSelector((state) => state.warehouses.warehouses);
   const style = useStyle();
   const params = useParams();
+  const paramsId = +params.id;
   const [warehouseState, dispatchWarehouseUpdateFn] = useReducer(
     warehouseReducerFn,
     false
@@ -110,30 +115,40 @@ const IndividualWarehouse = () => {
   const [isChangesAllow, setIsChangesAllow] = useState(false);
   const [doesDataChanged, setdoesDataChanged] = useState(false);
   const [warehousePrevData, setWarehousePrevData] = useState(warehouseState);
-  const specificWarehouseInfo = useSelector(
-    (state) => state.warehouses.warehouses
-  );
 
+  /**getting specific warehouse data */
   useEffect(() => {
-    if (specificWarehouseInfo.length === 0) return;
-    const fetchedData = specificWarehouseInfo
-      .filter((item) => item.id == params.id)
+    if (warehousesData.length === 0) return;
+    const fetchedData = warehousesData
+      .filter((item) => item.id === paramsId)
       .pop();
     fetchedData &&
       dispatchWarehouseUpdateFn({ type: "replaceData", data: fetchedData });
     setWarehousePrevData(fetchedData);
-  }, [specificWarehouseInfo.length]);
+  }, [warehousesData.length, paramsId, warehousesData]);
 
-  console.log("specific");
+  /**updating warehouse app wide state */
+  const updateWarehouseStateData = (warehouseId, changedWarehouse) => {
+    const updatedWarehouse = warehousesData.map((warehouse) => {
+      const data = [];
+      if (warehouse.id === warehouseId) {
+        const changed = (warehouse = changedWarehouse);
+        data.push(changed);
+      } else {
+        data.push(warehouse);
+      }
+      return data.pop();
+    });
+    dispatch(warehouseAction.updateWarehouses(updatedWarehouse));
+  };
 
-  const arrayOfFields = ["name", "code", "city", "cluster", "space_available"];
-
-  console.log(warehousePrevData);
-
+  /**updating warehouse state and sending it to firebase */
   const saveChangesHandler = () => {
     setWarehousePrevData(warehouseState);
     setIsChangesAllow(false);
     const id = warehouseState.id - 1;
+    updateWarehouseStateData(warehouseState.id, warehouseState);
+
     const updateWarehouseData = async () => {
       set(ref(db, "warehouse/" + id), warehouseState)
         .then(() => {
@@ -147,11 +162,13 @@ const IndividualWarehouse = () => {
     };
     updateWarehouseData();
   };
+  /**cancelling changes made to warehouse */
   const cancelChangesHandler = () => {
     setIsChangesAllow(false);
     dispatchWarehouseUpdateFn({ type: "replaceData", data: warehousePrevData });
   };
 
+  /**updating warehouse reducerFn on every keystroke */
   const onTextFieldChange = (e) => {
     const key = e.target.id;
     const value = e.target.value;

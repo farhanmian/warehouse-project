@@ -24,6 +24,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+// eslint-disable-next-line no-unused-vars
 const app = initializeApp(firebaseConfig);
 
 ReactDOM.render(
@@ -31,10 +32,6 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
         <App />
-        {/* <Routes> */}
-        {/* <Route path="/" element={<App />} /> */}
-        {/* <Route path="warehouse/:id" element={<IndividualWarehouse />} /> */}
-        {/* </Routes> */}
       </BrowserRouter>
     </Provider>
   </React.StrictMode>,
