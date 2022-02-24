@@ -7,10 +7,8 @@ import {
   CardActionArea,
   Button,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
-  ClickAwayListener,
 } from "@material-ui/core";
 import { Grid } from "@mui/material";
 import { ArrowDropDown } from "@material-ui/icons";
