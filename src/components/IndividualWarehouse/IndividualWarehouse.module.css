@@ -16,7 +16,7 @@
   width: 450px;
   position: relative;
   margin: auto;
-  margin-top: 150px;
+  margin-top: 180px;
 }
 .userInfoContainer > :not(:last-child) {
   margin-bottom: 50px;

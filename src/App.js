@@ -13,20 +13,32 @@ function App() {
 
   /**fetching warehouse data and updating appwide state*/
   useEffect(() => {
-    const dbRef = ref(getDatabase());
-    get(child(dbRef, `warehouse/`))
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          const data = snapshot.val();
-          dispatch(warehouseAction.updateWarehouses(data));
-        } else {
-          console.log("No data available");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        window.location.reload();
-      });
+    // const dbRef = ref(getDatabase());
+    // get(child(dbRef, `warehouse/`))
+    //   .then((snapshot) => {
+    //     if (snapshot.exists()) {
+    //       const data = snapshot.val();
+    //       dispatch(warehouseAction.updateWarehouses(data));
+    //     } else {
+    //       console.log("No data available");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //     window.location.reload();
+    //   });
+
+    const fetchData = async () => {
+      const res = await fetch(
+        "https://warehouse-project-3699f-default-rtdb.firebaseio.com/warehouse.json"
+      );
+      if (!res.ok) {
+        console.log("something went wrong");
+      }
+      const data = await res.json();
+      data && dispatch(warehouseAction.updateWarehouses(data));
+    };
+    fetchData();
   }, [dispatch]);
 
   return (

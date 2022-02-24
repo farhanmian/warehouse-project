@@ -7,11 +7,15 @@ import logo from "../../assets/img/logo.png";
 
 const Navigation = () => {
   const dispatch = useDispatch();
+  const logoClickedHandler = () => {
+    if (window.location.pathname === "/") return;
+    window.location.pathname = "/";
+  };
 
   return (
     <nav className={classes.nav}>
       <div className={classes.navContainer}>
-        <div className={classes.logoContainer}>
+        <div className={classes.logoContainer} onClick={logoClickedHandler}>
           <img src={logo} alt="logo" className={classes.logo} />
         </div>
         <div className={classes.searchBox}>
