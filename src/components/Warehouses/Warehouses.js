@@ -16,6 +16,7 @@ import { Grid } from "@mui/material";
 import { ArrowDropDown } from "@material-ui/icons";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Loading from "../Loading/Loading";
 
 const useStyle = makeStyles({
   warehouseCard: {
@@ -180,7 +181,7 @@ const Warehouses = () => {
           justifyContent="center"
           className={classes.warehouseContainer}
         >
-          {warehouseData.length > 0 &&
+          {warehouseData.length > 0 ? (
             warehouseData.map((warehouse) => {
               return (
                 warehouse.name
@@ -221,7 +222,10 @@ const Warehouses = () => {
                   </Grid>
                 )
               );
-            })}
+            })
+          ) : (
+            <Loading />
+          )}
         </Grid>
       </div>
     </section>
