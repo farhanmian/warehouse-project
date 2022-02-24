@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import classes from "./IndividualWarehouse.module.css";
 import { Typography, makeStyles, TextField, Button } from "@material-ui/core";
 import { useParams } from "react-router-dom";
@@ -76,7 +76,11 @@ const warehouseReducerFn = (state, action) => {
       code: action.data.code,
       city: action.data.city,
       cluster: action.data.cluster,
-      space_available: action.data.spaceAvailable,
+      space_available: action.data.space_available,
+      id: action.data.id,
+      is_live: action.data.is_live,
+      is_registered: action.data.is_registered,
+      type: action.data.type,
     };
   }
   if (action.type === "name") {
@@ -99,28 +103,39 @@ const warehouseReducerFn = (state, action) => {
 const IndividualWarehouse = () => {
   const style = useStyle();
   const params = useParams();
-  const specificWarehouseInfo = useSelector(
-    (state) => state.warehouses.warehouses
-  );
-  const item = specificWarehouseInfo
-    .filter((item) => item.id == params.id)
-    .pop();
-
   const [warehouseState, dispatchWarehouseUpdateFn] = useReducer(
     warehouseReducerFn,
-    item
+    false
   );
-
   const [isChangesAllow, setIsChangesAllow] = useState(false);
   const [doesDataChanged, setdoesDataChanged] = useState(false);
   const [warehousePrevData, setWarehousePrevData] = useState(warehouseState);
+  const specificWarehouseInfo = useSelector(
+    (state) => state.warehouses.warehouses
+  );
+
+  useEffect(() => {
+    if (specificWarehouseInfo.length === 0) return;
+    const fetchedData = specificWarehouseInfo
+      .filter((item) => item.id == params.id)
+      .pop();
+    fetchedData &&
+      dispatchWarehouseUpdateFn({ type: "replaceData", data: fetchedData });
+    setWarehousePrevData(fetchedData);
+  }, [specificWarehouseInfo.length]);
+
+  console.log("specific");
 
   const arrayOfFields = ["name", "code", "city", "cluster", "space_available"];
 
+  console.log(warehousePrevData);
+
   const saveChangesHandler = () => {
+    setWarehousePrevData(warehouseState);
     setIsChangesAllow(false);
+    const id = warehouseState.id - 1;
     const updateWarehouseData = async () => {
-      set(ref(db, "warehouse/" + warehouseState.id), warehouseState)
+      set(ref(db, "warehouse/" + id), warehouseState)
         .then(() => {
           // Data saved successfully!
           console.log("Data saved successfully!");
@@ -130,7 +145,6 @@ const IndividualWarehouse = () => {
           console.log("The write failed...");
         });
     };
-
     updateWarehouseData();
   };
   const cancelChangesHandler = () => {
@@ -156,7 +170,6 @@ const IndividualWarehouse = () => {
             }`}
             onClick={() => {
               setIsChangesAllow(true);
-              setWarehousePrevData(item);
             }}
           >
             <Edit className={style.editIcon} />

@@ -5,8 +5,8 @@ import App from "./App";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import { BrowserRouter } from "react-router-dom";
-import { Route, Routes } from "react-router-dom";
-import IndividualWarehouse from "./components/IndividualWarehouse/IndividualWarehouse";
+// import { Route, Routes } from "react-router-dom";
+// import IndividualWarehouse from "./components/IndividualWarehouse/IndividualWarehouse";
 
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -30,10 +30,11 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="warehouse/:id" element={<IndividualWarehouse />} />
-        </Routes>
+        <App />
+        {/* <Routes> */}
+        {/* <Route path="/" element={<App />} /> */}
+        {/* <Route path="warehouse/:id" element={<IndividualWarehouse />} /> */}
+        {/* </Routes> */}
       </BrowserRouter>
     </Provider>
   </React.StrictMode>,
